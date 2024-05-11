@@ -1,7 +1,84 @@
-.background{
+.screen{
     background: white;
     min-height: 100vh;
     width: 100%;
     display: flex;
     flex-direction: column;
+}
+
+.background{
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+}
+
+.content{
+    /*background: #747bff;*/
+    width: 1100px;
+    min-height: 700px;
+    margin: 90px 0 90px 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.img{
+    background: black;
+    height: 400px;
+    width: 400px;
+}
+
+.characteristics{
+    display: flex;
+    flex-direction: column;
+    background: rgba(210, 210, 220, 0.93);
+    box-shadow: 0px 0 20px rgba(0, 0, 0, 0.5);
+    width: 600px;
+    padding: 20px;
+}
+
+.labelName{
+    align-self: center;
+    font-weight: 700;
+    font-size: 36px;
+}
+
+.characteristic{
+    font-size: 24px;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    margin-top: 10px;
+}
+
+.labelCharacteristic{
+    font-weight: 600;
+    width: 300px;
+    /*background: #747bff;*/
+}
+
+.labelValue{
+
+}
+
+.addIcon{
+    margin-top: 40px;
+    height: 100px;
+    cursor: pointer;
+}
+
+.addIcon:hover{
+    filter: drop-shadow(0px 0px 10px rgba(0, 250, 20, 1));
+}
+
+.similarProducts{
+    background: #747bff;
+    width: 1400px;
+    display: flex;
+    background: rgba(210, 210, 220, 0.93);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    margin-bottom: 100px;
+    justify-content: center;
 }

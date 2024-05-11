@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import styles from './Login.module.css';
+import axios from "axios";
 
 interface LoginProps {
     onClose: () => void;
@@ -12,9 +13,12 @@ export default function Login({onClose, onRegisterClick}: LoginProps) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log('Отправка данных формы для входа:', {email, password});
-        onClose();
-    };
+        axios.post('http://localhost:5000/auth/login',
+            {'email':email, 'password':password}).then((resp)=>{
+            localStorage.setItem('jwt', resp.data.token)
+            onClose()
+        })
+    }
 
     return (
         <div className={styles.modal}>

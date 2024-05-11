@@ -1,0 +1,39 @@
+.background{
+    background: white;
+    border: grey 1px solid;
+    height: 100px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+    gap: 15px;
+    width: 880px;
+    cursor: pointer;
+}
+
+.img{
+    background: #1a1a1a;
+    height: 80px;
+    width: 80px;
+    margin: 10px;
+}
+
+.name{
+    /*background: #74d4f5;*/
+    width: 400px;
+}
+
+.price{
+    /*background: #5e59e1;*/
+    width: 100px;
+}
+
+.count{
+    /*background: #213547;*/
+    width: 100px;
+}
+
+.total{
+    /*background: #aaaaaa;*/
+    width: 100px;
+}

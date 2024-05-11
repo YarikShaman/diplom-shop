@@ -2,6 +2,7 @@ import React, {useEffect} from "react";
 import styles from './Main.module.css'
 import Header from "../../Components/Header/Header";
 import Login from "../../Components/Login/Login";
+import Registration from "../../Components/Registration/Registration";
 import {useRef, useState} from "react";
 import ShortProduct from "../../Components/ShortProduct/ShortProduct";
 import axios from "axios";
@@ -60,16 +61,16 @@ interface FilterOut {
 
 function FiltersToString(filters: FilterOut[]) {
 
-    if (filters.length===0)
+    if (filters.length === 0)
         return ''
     let result = '&characteristics=['
     filters.map((filter) => {
-        if (typeof (filter.Value)=="object")
+        if (typeof (filter.Value) == "object")
             result += `{"CharacteristicsID":${filter.CharacteristicsID},"Value":[${filter.Value}]},`
         else
             result += `{"CharacteristicsID":${filter.CharacteristicsID},"Value":"${filter.Value}"},`
     })
-    result=result.slice(0, -1)+']'
+    result = result.slice(0, -1) + ']'
     return result
 }
 
@@ -158,12 +159,12 @@ export default function Main() {
                 case "object":
                     switch (typeof filter.Value[0]) {
                         case "number":
-                            valueTemp=[]
+                            valueTemp = []
                             valueTemp.push(filter.Value[0], filter.Value[1])
                             temp.push({CharacteristicsID: filter.CharacteristicsID, Value: valueTemp})
                             break
                         case "object":
-                            filter.Value.map((elem: {name:string, isSelected:boolean }) => {
+                            filter.Value.map((elem: { name: string, isSelected: boolean }) => {
                                 if (elem.isSelected) {
                                     temp.push({CharacteristicsID: filter.CharacteristicsID, Value: elem.name})
                                 }
@@ -207,11 +208,20 @@ export default function Main() {
                        onRegisterClick={() => {
                            setRegisterOpen(true);
                            setLoginOpen(false)
-                       }}/>}
-        {/*{registerOpen && <Login/>}*/}
+                       }}/>
+            }
+            {registerOpen &&
+                <Registration onClose={() => setRegisterOpen(false)}
+                              onLoginClick={() => {
+                                  setRegisterOpen(false)
+                                  setLoginOpen(true)
+                              }}/>
+            }
             <div className={styles.background}>
 
-                <Header/>
+                <Header setLogin={() => {
+                    setLoginOpen(true)
+                }}/>
                 <div className={styles.content}>
                     <div className={styles.filters}>
                         <div className={styles.label}>Категорія товарів:</div>
@@ -264,16 +274,17 @@ export default function Main() {
                                                     {filter.Denotation.map((elem) => {
                                                         return (
                                                             <div className={styles.filterInputsStringDiv}>
-                                                                <input onChange={(e)=>{
+                                                                <input onChange={(e) => {
                                                                     const updatedFiltersCurrent = [...filtersCurrent]
                                                                     const filterIndex = updatedFiltersCurrent.findIndex(e => e.CharacteristicsID === filter.CharacteristicsID);
                                                                     if (filterIndex !== -1) {
                                                                         const temp = updatedFiltersCurrent[filterIndex];
-                                                                        const valueIndex = temp.Value.findIndex((e:{name:string, isSelected:boolean}) => e.name === elem);
-                                                                        updatedFiltersCurrent[filterIndex].Value[valueIndex].isSelected=e.target.checked
+                                                                        const valueIndex = temp.Value.findIndex((e: { name: string, isSelected: boolean }) => e.name === elem);
+                                                                        updatedFiltersCurrent[filterIndex].Value[valueIndex].isSelected = e.target.checked
                                                                     }
                                                                     setFiltersCurrent(updatedFiltersCurrent)
-                                                                }} type={"checkbox"} checked={filtersCurrent.find(e=>e.CharacteristicsID===filter.CharacteristicsID)?.Value.find((e:string)=>e===elem)}/>
+                                                                }} type={"checkbox"}
+                                                                       checked={filtersCurrent.find(e => e.CharacteristicsID === filter.CharacteristicsID)?.Value.find((e: string) => e === elem)}/>
                                                                 <label>{elem}</label>
                                                             </div>
                                                         )
@@ -307,7 +318,7 @@ export default function Main() {
                             category ?
                                 products?.map((product) => {
                                         return (
-                                            <ShortProduct name={product.Name} count={product.Count} price={product.Price}
+                                            <ShortProduct id={product.ProductID} name={product.Name} count={product.Count} price={product.Price}
                                                           img={product.Img.data}/>)
                                     }
                                 ) : categories?.map(category => {
@@ -318,21 +329,6 @@ export default function Main() {
                                         className={styles.category}>{category.Name}</div>
                                 })
                         }
-                        {/*{*/}
-                        {/*    category ?*/}
-                        {/*        products?.map((product) => {*/}
-                        {/*                return (*/}
-                        {/*                    <ShortProduct name={product.Name} count={product.Count} price={product.Price}*/}
-                        {/*                                  img={product.Img.data}/>)*/}
-                        {/*            }*/}
-                        {/*        ) : categories?.map(category => {*/}
-                        {/*            return <div*/}
-                        {/*                id={String(category.CategoryID)}*/}
-                        {/*                key={category.CategoryID}*/}
-                        {/*                onClick={handleCategoryClick}*/}
-                        {/*                className={styles.category}>{category.Name}</div>*/}
-                        {/*        })*/}
-                        {/*}*/}
                     </div>
                 </div>
             </div>

@@ -1,0 +1,100 @@
+.screen{
+    background: white;
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.background{
+    /*background: #4f3030;*/
+    background: white;
+    flex-grow: 1;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+
+.content{
+    background: rgba(210, 210, 220, 0.93);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    width: 1100px;
+    min-height: 500px;
+    margin: 90px 0 90px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    padding: 30px;
+}
+
+.row{
+    display: flex;
+    flex-direction: row;
+    font-size: 26px;
+}
+
+.labelBold{
+    font-weight: 700;
+    width: 300px;
+    text-align: start;
+    /*background: #747bff;*/
+}
+
+.label{
+    /*background: #74d4f5;*/
+    width: 300px;
+}
+
+.basketLabel{
+    font-weight: 700;
+    font-size: 36px;
+    margin-top: 40px;
+}
+
+.basket{
+    width: 880px;
+    background: #74d4f5;
+    margin-top: 40px;
+    font-size: 20px;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.basketTop{
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    text-align: center;
+    height: 40px;
+    font-size: 22px;
+    font-weight: 600;
+    background: gray;
+}
+
+.img{
+    width: 100px;
+}
+
+.name{
+    /*background: #74d4f5;*/
+    width: 400px;
+}
+
+.price{
+    /*background: #5e59e1;*/
+    width: 100px;
+}
+
+.count{
+    /*background: #213547;*/
+    width: 100px;
+}
+
+.total{
+    /*background: #aaaaaa;*/
+    width: 100px;
+}

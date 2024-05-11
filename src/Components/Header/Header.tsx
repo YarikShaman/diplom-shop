@@ -1,11 +1,34 @@
 import styles from './Header.module.css'
 import accountIcon from '../../Imges/account.svg'
+import {useNavigate} from "react-router-dom";
+import { useEffect, useState} from "react";
+import axios from "axios";
 
-export default function Header(){
+export default function Header({setLogin}:{setLogin:(()=>void)}){
+
+    const nav = useNavigate()
+    const [accountName, setAccountName] = useState('')
+    useEffect(()=>{
+        const jwt = localStorage.getItem('jwt')
+        if (jwt){
+            axios.get('http://localhost:5000/auth/account',
+                {headers: {Authorization: "Bearer " + jwt}}).then((resp)=>{
+                    setAccountName(resp.data.fullName)
+            })
+        }
+        else
+            setAccountName('Login')
+    }, [])
+    const accountClickHandler= ()=>{
+        if (accountName!==''&&accountName!=='Login')
+            nav('/account')
+        else
+            setLogin()
+    }
 
     return(
         <div className={styles.background}>
-            <svg className={styles.logo} viewBox="0 0 212 102" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg className={styles.logo} onClick={()=>nav('/')} viewBox="0 0 212 102" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M210.5 51C210.5 64.1786 199.348 76.5475 180.303 85.7108C161.365 94.8225 135.097 100.5 106 100.5C76.9035 100.5 50.6352 94.8225 31.697 85.7108C12.6519 76.5475 1.5 64.1786 1.5 51C1.5 37.8214 12.6519 25.4525 31.697 16.2892C50.6352 7.17747 76.9035 1.5 106 1.5C135.097 1.5 161.365 7.17747 180.303 16.2892C199.348 25.4525 210.5 37.8214 210.5 51Z" fill="white" stroke="#0A19A4" stroke-width="3"/>
                 <mask id="path-2-outside-1_0_1" maskUnits="userSpaceOnUse" x="41" y="22" width="131" height="31" fill="black">
                     <rect fill="white" x="41" y="22" width="131" height="31"/>
@@ -23,8 +46,8 @@ export default function Header(){
             <div className={styles.rightBlock}>
                 <div className={styles.aboutUs}>Про нас</div>
                 <div className={styles.account}>
-                    <img className={styles.accountIcon} src={accountIcon}/>
-                    <div className={styles.accountName}>Іван Іванович</div>
+                    <img alt={'account'} onClick={accountClickHandler} className={styles.accountIcon} src={accountIcon}/>
+                    <div className={styles.accountName}>{accountName}</div>
                 </div>
             </div>
         </div>
