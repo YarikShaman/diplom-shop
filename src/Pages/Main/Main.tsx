@@ -60,17 +60,20 @@ interface FilterOut {
 
 function FiltersToString(filters: FilterOut[]) {
 
-    let result = ''
+    if (filters.length===0)
+        return ''
+    let result = '&characteristics=['
     filters.map((filter) => {
-        if (filter.Value)
-            result += `&characteristics=[{"CharacteristicsID":${filter.CharacteristicsID},"Value":${filter.Value}}]`
+        if (typeof (filter.Value)=="object")
+            result += `{"CharacteristicsID":${filter.CharacteristicsID},"Value":[${filter.Value}]},`
+        else
+            result += `{"CharacteristicsID":${filter.CharacteristicsID},"Value":"${filter.Value}"},`
     })
+    result=result.slice(0, -1)+']'
     return result
 }
 
 export default function Main() {
-
-    console.log('start')
 
     const [loginOpen, setLoginOpen] = useState(false);
     const [registerOpen, setRegisterOpen] = useState(false);
@@ -91,10 +94,8 @@ export default function Main() {
     };
 
     useEffect(() => {
-        console.log("uE1")
         axios.get('http://localhost:5000/product/categories').then(
             (res) => {
-                console.log('new category set')
                 setCategories(res.data.categories)
             }
         ).catch((err) => {
@@ -103,7 +104,6 @@ export default function Main() {
     }, [])
 
     useEffect(() => {
-        console.log('uE2')
         axios.get(`http://localhost:5000/product/characteristics?categoryId=${category}`).then(
             (res) => {
                 setFilters(res.data.filters)
@@ -115,7 +115,7 @@ export default function Main() {
     }, [category])
 
     useEffect(() => {
-        console.log('eU3')
+        console.log(filters)
         const temp: FilterOut[] = []
         filters?.map((filter: Filter) => {
             let tempValue
@@ -152,44 +152,43 @@ export default function Main() {
 
     useEffect(() => {
         const temp: FilterOut[] = []
-        const valueTemp: number[] = []
-        console.log('uE4: ', filtersCurrent)
+        let valueTemp: number[] = []
         filtersCurrent.map((filter) => {
             switch (typeof filter.Value) {
                 case "object":
                     switch (typeof filter.Value[0]) {
                         case "number":
+                            valueTemp=[]
                             valueTemp.push(filter.Value[0], filter.Value[1])
                             temp.push({CharacteristicsID: filter.CharacteristicsID, Value: valueTemp})
                             break
-                        case "string":
-                            filter.Value.map((elem: string) => {
-                                temp.push({CharacteristicsID: filter.CharacteristicsID, Value: elem})
+                        case "object":
+                            filter.Value.map((elem: {name:string, isSelected:boolean }) => {
+                                if (elem.isSelected) {
+                                    temp.push({CharacteristicsID: filter.CharacteristicsID, Value: elem.name})
+                                }
                             })
                             break
                     }
-                    filter.Value.map(() => {
-                        temp.push({CharacteristicsID: filter.CharacteristicsID, Value: filter.Value})
-                    })
                     break
-                case "number":
-                    switch (filter.Value) {
-                        case 1:
-                            temp.push({CharacteristicsID: filter.CharacteristicsID, Value: true})
-                            break
-                        case 2:
-                            temp.push({CharacteristicsID: filter.CharacteristicsID, Value: false})
-                            break
-                    }
-                    break
+                // case "number":
+                //     switch (filter.Value) {
+                //         case 1:
+                //             temp.push({CharacteristicsID: filter.CharacteristicsID, Value: true})
+                //             break
+                //         case 2:
+                //             temp.push({CharacteristicsID: filter.CharacteristicsID, Value: false})
+                //             break
+                //     }
+                //     break
             }
         })
         setFiltersOut(temp)
     }, [filtersCurrent])
 
     useEffect(() => {
-        console.log('uE')
         const filterList = FiltersToString(filtersOut)
+        console.log('filterList: ', filterList)
         axios.get(`http://localhost:5000/product/?categoryId=${category}${filterList}`).then(
             (res) => {
                 setProducts(res.data.products)
@@ -282,14 +281,14 @@ export default function Main() {
                                                 </div>
                                             </div>
                                         )
-                                    case 3:
-                                        return (
-                                            <div className={styles.filterDiv}>
-                                                <div className={styles.filterLabel}>
-                                                    {filter.Characteristic.Name}
-                                                </div>
-                                            </div>
-                                        )
+                                    // case 3:
+                                    //     return (
+                                    //         <div className={styles.filterDiv}>
+                                    //             <div className={styles.filterLabel}>
+                                    //                 {filter.Characteristic.Name}
+                                    //             </div>
+                                    //         </div>
+                                    //     )
                                     // case 4:
                                     //     return (
                                     //         <div className={styles.filterDiv}>
