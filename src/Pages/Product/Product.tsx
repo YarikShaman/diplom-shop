@@ -1,11 +1,12 @@
 import styles from './Product.module.css'
 import Header from "../../Components/Header/Header";
 import {useEffect, useState} from "react";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 import Login from "../../Components/Login/Login";
 import Registration from "../../Components/Registration/Registration";
 import addIcon from '../../Imges/add-items.svg'
+import inBasket from '../../Imges/cart-trolly.svg'
 import ShortProduct from "../../Components/ShortProduct/ShortProduct";
 
 interface Props {
@@ -67,9 +68,12 @@ export default function Product() {
 
     const [data, setData] = useState<Props>()
     const id = useParams().id
+    const nav = useNavigate()
     const [loginOpen, setLoginOpen] = useState(false);
     const [registerOpen, setRegisterOpen] = useState(false);
     const [imageSrc, setImageSrc] = useState<string | undefined>(undefined);
+    const [iconSrc, setIconSrc] = useState(addIcon)
+    const [count, setCount] = useState(1)
 
     useEffect(() => {
         axios.get(`http://localhost:5000/product/${id}`).then((res) => {
@@ -81,6 +85,18 @@ export default function Product() {
             return () => URL.revokeObjectURL(imageUrl);
         })
     }, [id])
+
+    useEffect(() => {
+        const jwt = localStorage.getItem('jwt')
+        axios.get('http://localhost:5000/auth/account',
+            {headers: {Authorization: "Bearer " + jwt}}).then((res) => {
+            console.log(res.data.basketItems.find((e: any) => e.ProductID === data?.product.ProductID))
+            if (res.data.basketItems.find((e: any) => e.ProductID === data?.product.ProductID))
+                setIconSrc(inBasket)
+            else
+                setIconSrc(addIcon)
+        })
+    }, [iconSrc, data])
 
     return (
         <div className={styles.screen}>
@@ -120,14 +136,33 @@ export default function Product() {
                                 )
                             })
                         }
-                        <img onClick={() => {
-                            axios.post('http://localhost:5000/product/basket',
-                                {'productId': data?.product.ProductID, 'count': "1"},
-                                {headers: {Authorization: "Bearer " + localStorage.getItem('jwt')}}).catch((err) => {
-                                console.log(err)
-                                setLoginOpen(true)
-                            })
-                        }} src={addIcon} alt={'add-to-basket'} className={styles.addIcon}/>
+                        <div className={styles.basketOperations}>
+                            <img onClick={() => {
+                                if (iconSrc === addIcon)
+                                    axios.post('http://localhost:5000/product/basket',
+                                        {'productId': data?.product.ProductID, 'count': "1"},
+                                        {headers: {Authorization: "Bearer " + localStorage.getItem('jwt')}}
+                                    ).then(()=>{
+                                        setIconSrc(inBasket)
+                                    }).catch((err) => {
+                                        console.log(err)
+                                        setLoginOpen(true)
+                                    })
+                                else
+                                    nav('/account')
+                            }} src={iconSrc} alt={'add-to-basket'} className={styles.addIcon}/>
+                            {
+                                iconSrc === addIcon &&
+                                <input type={"number"} min={1} className={styles.countInput} value={count}
+                                       onChange={(e) => {
+                                           setCount(parseInt(e.currentTarget.value, 10))
+                                       }}/>
+                            }
+                            {
+                                iconSrc !== addIcon &&
+                                <label>Вже у кошику!</label>
+                            }
+                        </div>
                     </div>
                 </div>
                 <div className={styles.similarProducts}>

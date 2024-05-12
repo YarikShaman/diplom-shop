@@ -24,6 +24,7 @@
     justify-content: space-between;
 }
 
+
 .img{
     background: black;
     height: 400px;
@@ -59,14 +60,31 @@
     /*background: #747bff;*/
 }
 
-.labelValue{
-
+.basketOperations{
+    /*background: #5e59e1;*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    margin-top: 40px;
 }
 
 .addIcon{
-    margin-top: 40px;
+    margin-right: 40px;
     height: 100px;
     cursor: pointer;
+    /*background: #1a1a1a;*/
+}
+
+.countInput{
+    height: 16px;
+    width: 40px;
+    text-align: end;
+}
+
+label{
+    font-size: 30px;
+    font-weight: 700;
 }
 
 .addIcon:hover{

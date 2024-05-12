@@ -21,8 +21,10 @@
     flex-direction: column;
 }
 
+
 .img{
-    background: #646cff;
+    background: white;
+    object-fit: contain;
     width: 180px;
     height: 180px;
     /*justify-self: center;*/

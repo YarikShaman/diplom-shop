@@ -33,17 +33,16 @@
     display: flex;
     flex-direction: row;
     font-size: 26px;
+    align-items: center;
 }
 
 .labelBold{
     font-weight: 700;
     width: 300px;
     text-align: start;
-    /*background: #747bff;*/
 }
 
 .label{
-    /*background: #74d4f5;*/
     width: 300px;
 }
 
@@ -55,7 +54,7 @@
 
 .basket{
     width: 880px;
-    background: #74d4f5;
+    background: white;
     margin-top: 40px;
     font-size: 20px;
     min-height: 140px;
@@ -98,3 +97,61 @@
     /*background: #aaaaaa;*/
     width: 100px;
 }
+
+.newOrder{
+    margin-top: 100px;
+}
+
+.salesDiv{
+    background: rgba(255, 255, 255, 0.35);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    border: gray 1px solid;
+    padding: 20px;
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 50px;
+}
+
+.labelBold2{
+    font-weight: 700;
+    width: 300px;
+    text-align: start;
+    font-size: 20px;
+    /*background: #5e59e1;*/
+}
+
+.label2{
+    font-size: 20px;
+}
+
+.input{
+    height: 20px;
+}
+
+.buttons{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.cancel{
+    background: #c58100;
+    font-size: 20px;
+}
+
+.cancel:hover{
+    background: orange;
+}
+
+.apply{
+    background: green;
+    font-size: 20px;
+    margin-left: 20px;
+}
+
+.apply:hover{
+    background: #00c000;
+}
+

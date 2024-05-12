@@ -12,10 +12,12 @@
 }
 
 .img{
-    background: #1a1a1a;
+    background: white;
     height: 80px;
     width: 80px;
     margin: 10px;
+    font-size: 16px;
+    object-fit: contain;
 }
 
 .name{

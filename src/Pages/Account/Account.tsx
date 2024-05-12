@@ -45,6 +45,10 @@ export default function Account() {
     const nav = useNavigate()
     const [loginOpen, setLoginOpen] = useState(false);
     const [registerOpen, setRegisterOpen] = useState(false);
+    const [isSalesOpen, setIsSalesOpen] = useState(false)
+    const [phone, setPhone] = useState('')
+    const [paymentMethod, setPaymentMethod] = useState('GooglePay')
+    const [address, setAddress] = useState('')
 
     useEffect(() => {
         axios.get('http://localhost:5000/auth/account',
@@ -54,7 +58,7 @@ export default function Account() {
             console.log(err)
             nav('/')
         })
-    }, [])
+    }, [nav, isSalesOpen])
 
     return (
         <div className={styles.screen}>
@@ -94,7 +98,7 @@ export default function Account() {
                             <div className={styles.name}>Назва</div>
                             <div className={styles.price}>Ціна</div>
                             <div className={styles.count}>Кількість</div>
-                            <div className={styles.total}>Підс.</div>
+                            <div className={styles.total}>Підсумок</div>
                         </div>
                         {
                             data?.basketItems.map((item) => {
@@ -104,6 +108,69 @@ export default function Account() {
                             })
                         }
                     </div>
+                    {
+                        !isSalesOpen &&
+                        <button className={styles.newOrder} onClick={() => {
+                            setIsSalesOpen(true)
+                        }}>Замовити</button>
+                    }
+                    {
+                        isSalesOpen &&
+                        <div className={styles.salesDiv}>
+                            <div className={styles.row}>
+                                <div className={styles.labelBold2}>Телефон отримувача</div>
+                                <input value={phone} onChange={(e) => {
+                                    setPhone(e.currentTarget.value)
+                                }} type={'phone'} className={styles.input}/>
+                            </div>
+                            <div className={styles.row}>
+                                <div className={styles.labelBold2}>Адреса</div>
+                                <input value={address} onChange={(e) => {
+                                    setAddress(e.currentTarget.value)
+                                }}/>
+                            </div>
+                            <div className={styles.row}>
+                                <div className={styles.labelBold2}>Метод оплати</div>
+                                <input value={paymentMethod} onChange={(e) => {
+                                    setPaymentMethod(e.currentTarget.value)
+                                }}/>
+                            </div>
+                            <div className={styles.row}>
+                                <div className={styles.labelBold2}>Підсумкова вартість</div>
+                                <div className={styles.label2}>
+                                    {data?.basketItems.reduce((total, item) => {
+                                        return total + item.Product.Price * item.Count;
+                                    }, 0)} грн
+                                </div>
+                            </div>
+                            <div className={styles.buttons}>
+                                <button onClick={() => {
+                                    setIsSalesOpen(false)
+                                }} className={styles.cancel}>Відміна
+                                </button>
+                                <button onClick={() => {
+                                    const productIds: number[] = []
+                                    const quantities: number[] = []
+                                    const jwt = localStorage.getItem('jwt')
+                                    data?.basketItems.map((item) => {
+                                        productIds.push(item.ProductID)
+                                        quantities.push(item.Count)
+                                    })
+                                    axios.post('http://localhost:5000/orders/newOrder',
+                                        {
+                                            "productIds": productIds,
+                                            "quantities": quantities,
+                                            "phoneNumber": phone,
+                                            "paymentMethod": paymentMethod,
+                                            "address": address
+                                        }, {headers: {Authorization: "Bearer " + jwt}}).then(()=>{
+                                            setIsSalesOpen(false)
+                                    }).catch(e=>{console.log(e)})
+                                }} className={styles.apply}>Замовити
+                                </button>
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
